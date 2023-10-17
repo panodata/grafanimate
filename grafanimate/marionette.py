@@ -4,6 +4,7 @@
 import atexit
 import json
 import logging
+import time
 from collections import OrderedDict
 
 import where
@@ -172,6 +173,16 @@ class FirefoxMarionetteBase(object):
         """
         Return screenshot from element.
         """
+        while True:
+            result = self.marionette.execute_script('''
+            panels = Object.values(window.wrappedJSObject.grafanaRuntime.getPanelData())
+            return panels.length && panels.every(function(o) {return o?.state=='Done'})
+            ''')
+            if result:
+                break
+            logger.info("waiting for panels to load")
+            time.sleep(0.1)
+
         image = self.marionette.screenshot(element=element, format="binary")
         return image
 
