@@ -34,6 +34,7 @@ class GrafanaWrapper(FirefoxMarionetteBase):
         """
         log.info("Starting Grafana at {}".format(self.baseurl))
 
+        self.set_window_size(1920,1080+85*2.2)
         self.navigate(self.baseurl)
 
     def navigate(self, url):
@@ -43,6 +44,9 @@ class GrafanaWrapper(FirefoxMarionetteBase):
 
         # Wait for Grafana application to load.
         self.wait_for_grafana()
+
+        # Zoom page
+        self.marionette.set_pref("layout.css.devPixelsPerPx", str(2.2))
 
         # Load Javascript for GrafanaStudio sidecar service.
         jsfiles = ["grafana-util.js", "grafana-studio.js"]
